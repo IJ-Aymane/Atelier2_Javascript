@@ -37,6 +37,3 @@ L'objectif de ce travail pratique est de mettre en application les concepts fond
 - **Emprunts (Map)** : Association livre-emprunteur, vérification, suppression.
 
 ---
-
-## 🗂 Structure du projet
-

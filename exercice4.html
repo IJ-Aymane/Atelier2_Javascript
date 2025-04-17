@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini Blog POO</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+    }
+    input, textarea {
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4a49d3;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .post {
+      background-color: #f4f4f4;
+      padding: 15px;
+      margin-top: 10px;
+      border-radius: 6px;
+    }
+    .post h3 {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Mini Blog (POO)</h1>
+    
+    <h2>Ajouter un Post</h2>
+    <input type="text" id="title" placeholder="Titre">
+    <textarea id="description" placeholder="Description"></textarea>
+    <button onclick="addPost()">Publier</button>
+
+    <h2>Liste des Posts</h2>
+    <div id="posts"></div>
+  </div>
+
+  <script>
+
+    class User {
+      constructor(username) {
+        this.username = username;
+      }
+
+      toJSON() {
+        return {
+          username: this.username
+        };
+      }
+    }
+
+    class Post {
+      constructor(title, description, user) {
+        this.title = title;
+        this.description = description;
+        this.user = user;
+        this.date = new Date().toLocaleString();
+      }
+
+      toJSON() {
+        return {
+          title: this.title,
+          description: this.description,
+          user: this.user.toJSON(),
+          date: this.date
+        };
+      }
+
+      static fromJSON(json) {
+        const user = new User(json.user.username);
+        const post = new Post(json.title, json.description, user);
+        post.date = json.date;
+        return post;
+      }
+    }
+
+    let currentUser = new User("aymane"); 
+    let posts = [];
+
+    function addPost() {
+      const title = document.getElementById("title").value;
+      const description = document.getElementById("description").value;
+
+      if (title && description) {
+        const post = new Post(title, description, currentUser);
+        posts.push(post);
+
+        const jsonPosts = JSON.stringify(posts.map(p => p.toJSON()));
+        localStorage.setItem("posts", jsonPosts);
+
+        displayPosts();
+        document.getElementById("title").value = "";
+        document.getElementById("description").value = "";
+      }
+    }
+
+    function displayPosts() {
+      const postsContainer = document.getElementById("posts");
+      postsContainer.innerHTML = "";
+
+      posts.forEach(post => {
+        const postEl = document.createElement("div");
+        postEl.className = "post";
+        postEl.innerHTML = `
+          <h3>${post.title}</h3>
+          <p>${post.description}</p>
+          <small>Par: ${post.user.username} | ${post.date}</small>
+        `;
+        postsContainer.appendChild(postEl);
+      });
+    }
+
+    function loadPosts() {
+      const json = localStorage.getItem("posts");
+      if (json) {
+        const array = JSON.parse(json);
+        posts = array.map(p => Post.fromJSON(p));
+        displayPosts();
+      }
+    }
+
+    loadPosts();
+  </script>
+</body>
+</html>

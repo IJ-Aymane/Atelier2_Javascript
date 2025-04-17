@@ -12,7 +12,7 @@ Ce projet est réalisé dans le cadre de l'Atelier 2 en JavaScript, portant sur 
 - Créer une interface interactive pour illustrer les concepts vus en cours.
 
 
-👨‍💻 Réalisé par
-Nom : Aymane
+👨‍💻 Réalisé par Aymane
+ 
 Atelier 2 - JavaScript et POO
 
